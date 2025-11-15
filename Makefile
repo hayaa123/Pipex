@@ -3,7 +3,7 @@ CC= cc
 CFLAGS= -Wall -Werror -Wextra -I./libft -g
 LIB =pipex.a
 LIBFT_DIR= ./libft/
-SRC = utils.c
+SRC = utils.c prepare.c
 LIBFT_SRC = \
 $(LIBFT_DIR)ft_isalpha.c $(LIBFT_DIR)ft_isdigit.c $(LIBFT_DIR)ft_isalnum.c $(LIBFT_DIR)ft_isascii.c $(LIBFT_DIR)ft_isprint.c $(LIBFT_DIR)ft_strlen.c \
 $(LIBFT_DIR)ft_memset.c $(LIBFT_DIR)ft_bzero.c $(LIBFT_DIR)ft_memcpy.c $(LIBFT_DIR)ft_memmove.c $(LIBFT_DIR)ft_toupper.c $(LIBFT_DIR)ft_tolower.c \

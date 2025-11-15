@@ -1,28 +1,44 @@
 #include "pipex.h"
-// #include <unistd.h>
-// #include <stdio.h>
-// #include<wait.h>
-int main(int argc, char **srgv, char *env[])
+
+int main(int argc, char **argv, char *env[])
 {
-    char *path = absoulute_path("lls",env);
-    ft_printf("%s\n", path);
-    free(path);
-    // int id = fork();
-    // if (id == 0)
-    // {
-    //     char *args[] = {
-    //         "/bin/ls",
-    //         "-a",
-    //         NULL
-    //     };
-    //     char *env[] = {
-    //         "PATH=/binaaaa",
-    //         NULL
-    //     };
-    //     if (execve(args[0],args,env) == -1)
-    //     {
-    //         perror("execve error");
-    //     }
-    // }
-    // wait(NULL);
+    // int fd[2];
+    int id;
+    int id2;
+    char **cmd1;
+    char **cmd2;
+    int status;
+
+    cmd1 = prepare_aruments(argv[2],env);
+    cmd2 = prepare_aruments(argv[3],env);
+    ft_printf("%s\n",cmd1[0]);
+    id = fork();
+
+    if(id == -1)
+    {
+        perror("fork error");
+        return 2;
+    }
+    if (id == 0)
+    {
+        if (execve(cmd1[0],cmd1,env) == -1)
+        {
+            perror("execve error");
+            exit(1);
+        }
+    }
+    id2 = fork();
+    if(id2 == -1)
+    {
+        perror("fork error");
+        return 2;
+    }
+    if(id2 == 0)
+        if (execve(cmd2[0],cmd2,env) == -1)
+        {
+            perror("execve error");
+            exit(1);
+        }
+    waitpid(id,&status,0);
+    waitpid(id2,&status,0);
 }
