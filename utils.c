@@ -17,7 +17,7 @@ static char *get_path(char* env[])
     return (path);
 }
 
-static void free_splitted(char **splitted)
+void free_splitted(char **splitted)
 {
     int i;
 
@@ -30,7 +30,7 @@ static void free_splitted(char **splitted)
     free(splitted);
 }
 
-char *safe_join(char *str1,char *str2)
+static char *safe_join(char *str1,char *str2)
 {
     char *result;
     result = ft_strjoin(str1,str2);
