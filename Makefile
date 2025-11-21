@@ -19,7 +19,7 @@ OBJ := $(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(LIB) main.c
-	cc main.c -L. $(LIB) -I./libft -o $(NAME)
+	cc test.c -L. $(LIB) -I./libft -o $(NAME)
 
 $(LIB): $(LIBFT_OBJ) $(OBJ)
 	ar rcs $(LIB) $(LIBFT_OBJ) $(OBJ)

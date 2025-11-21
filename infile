@@ -1,3 +1,4 @@
-Hello from infile
-This is test input for the Pipex project.
-You can replace this text with any input you want.
+ls -l 
+pwd
+ssh
+cat "hello" > lolo

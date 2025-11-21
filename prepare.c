@@ -10,10 +10,7 @@ char **prepare_aruments(char *arg,char *env[])
     out = ft_split(arg, ' ');
     path = absoulute_path(out[0],env);
     if (path == NULL)
-    {
-        perror("command not found");
-        exit(EXIT_FAILURE);
-    }
+        return (NULL);
     temp_path = out[0];
     out[0] = path;    
     free(temp_path);

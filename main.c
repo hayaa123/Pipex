@@ -31,11 +31,13 @@ void outfile_cmd_exec(char **argv, char *env[], int fd[], char **cmd2,int outfil
         exit(1);
     }
 }
+
 int fork_eror()
 {
     perror("fork error");
     return 2;
 }
+
 int create_sup_process(char **argv, char *env[], int fd[],int outfile)
 {
     int id;
@@ -84,7 +86,6 @@ int main(int argc, char **argv, char *env[])
     }
     if (create_sup_process(argv,env,fd,outfile) != 0)
         return create_sup_process(argv,env,fd,outfile);
-    dup2(outfile,1);
     close(fd[0]);
     close(outfile);
 }
