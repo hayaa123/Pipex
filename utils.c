@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/22 17:22:20 by haya              #+#    #+#             */
+/*   Updated: 2025/11/22 21:09:13 by haya             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 static char *get_path(char* env[])
 {
@@ -17,19 +29,6 @@ static char *get_path(char* env[])
     return (path);
 }
 
-void free_splitted(char **splitted)
-{
-    int i;
-
-    i = 0;
-    while(splitted[i])
-    {
-        free(splitted[i]);
-        i++;
-    }
-    free(splitted);
-}
-
 static char *safe_join(char *str1,char *str2)
 {
     char *result;
@@ -44,7 +43,7 @@ char *absoulute_path(char *cmd, char* env[])
     char **paths;
     char *sub;
     int i;
-
+    
     path = get_path(env);
     paths = ft_split(path, ':');
     free(path);
@@ -52,8 +51,9 @@ char *absoulute_path(char *cmd, char* env[])
     while(paths[i]){
         sub = ft_strjoin(paths[i],"/");
         sub = safe_join(sub, cmd);
-        if (access(sub,F_OK) == 0)
+        if (access(sub, F_OK) == 0)
         {
+            errno = 0;
             free_splitted(paths);
             return (sub);
         }
