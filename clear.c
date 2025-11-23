@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 17:21:53 by haya              #+#    #+#             */
-/*   Updated: 2025/11/22 19:37:11 by haya             ###   ########.fr       */
+/*   Updated: 2025/11/23 10:38:08 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void free_fd(int **fd, int len)
     int i;
 
     i = 0;
-    while(i < len)
+    while (i < len)
     {
         free(fd[i]);
         i++;
@@ -25,13 +25,12 @@ void free_fd(int **fd, int len)
     free(fd);
 }
 
-
 void free_splitted(char **splitted)
 {
     int i;
 
     i = 0;
-    while(splitted[i])
+    while (splitted[i])
     {
         free(splitted[i]);
         i++;
