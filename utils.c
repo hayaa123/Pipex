@@ -3,63 +3,66 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 17:22:20 by haya              #+#    #+#             */
-/*   Updated: 2025/11/22 21:09:13 by haya             ###   ########.fr       */
+/*   Updated: 2025/11/23 15:37:25 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-static char *get_path(char* env[])
-{
-    char *path;
-    int i;
 
-    i = 0;
-    while(env[i])
-    {
-        if(ft_strnstr(env[i],"PATH=",5))
-        {
-            path = env[i];
-        }
-        i++;
-    }
-    path = ft_strtrim(path,"PATH=");
-    return (path);
+static char	*get_path(char *env[])
+{
+	char	*path;
+	int		i;
+
+	i = 0;
+	while (env[i])
+	{
+		if (ft_strnstr(env[i], "PATH=", 5))
+		{
+			path = env[i];
+		}
+		i++;
+	}
+	path = ft_strtrim(path, "PATH=");
+	return (path);
 }
 
-static char *safe_join(char *str1,char *str2)
+static char	*safe_join(char *str1, char *str2)
 {
-    char *result;
-    result = ft_strjoin(str1,str2);
-    free(str1);
-    return (result);
+	char	*result;
+
+	result = ft_strjoin(str1, str2);
+	free(str1);
+	return (result);
 }
 
-char *absoulute_path(char *cmd, char* env[])
+char	*absoulute_path(char *cmd, char *env[])
 {
-    char *path;
-    char **paths;
-    char *sub;
-    int i;
-    
-    path = get_path(env);
-    paths = ft_split(path, ':');
-    free(path);
-    i = 0;
-    while(paths[i]){
-        sub = ft_strjoin(paths[i],"/");
-        sub = safe_join(sub, cmd);
-        if (access(sub, F_OK) == 0)
-        {
-            errno = 0;
-            free_splitted(paths);
-            return (sub);
-        }
-        free(sub);
-        i++;
-    }
-    free_splitted(paths);
-    return(NULL);
+	char	*path;
+	char	**paths;
+	char	*sub;
+	int		i;
+
+	path = get_path(env);
+	paths = ft_split(path, ':');
+	free(path);
+	i = 0;
+	while (paths[i])
+	{
+		sub = ft_strjoin(paths[i], "/");
+		sub = safe_join(sub, cmd);
+		if (access(sub, F_OK) == 0)
+		{
+			errno = 0;
+			free_splitted(paths);
+			return (sub);
+		}
+		free(sub);
+		i++;
+	}
+	free_splitted(paths);
+	return (NULL);
 }
