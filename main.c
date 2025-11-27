@@ -6,13 +6,13 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 21:10:03 by haya              #+#    #+#             */
-/*   Updated: 2025/11/23 15:41:56 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/11/27 09:36:33 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	create_pipes(int argc, int **fd)
+static void	create_pipes(int argc, int **fd)
 {
 	int	i;
 
@@ -28,7 +28,7 @@ void	create_pipes(int argc, int **fd)
 	}
 }
 
-void	close_files(int **fd, int i, int input, int argc)
+static void	close_files(int **fd, int i, int input, int argc)
 {
 	if (i > 0)
 		safe_close(fd[i - 1][0], "pipe read close");
@@ -38,7 +38,7 @@ void	close_files(int **fd, int i, int input, int argc)
 		safe_close(input, "input close");
 }
 
-void	create_pipes_process(int argc, char **argv, char *env[], int **fd)
+static void	create_pipes_process(int argc, char **argv, char *env[], int **fd)
 {
 	int		i;
 	char	**cmd;
@@ -67,7 +67,7 @@ void	create_pipes_process(int argc, char **argv, char *env[], int **fd)
 	}
 }
 
-void	wait_all_process(int argc)
+static void	wait_all_process(int argc)
 {
 	int	i;
 	int	status;
