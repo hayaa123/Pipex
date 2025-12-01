@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 21:10:03 by haya              #+#    #+#             */
-/*   Updated: 2025/11/27 09:36:33 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/01 10:23:10 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,11 +86,14 @@ int	main(int argc, char **argv, char *env[])
 	int	len;
 
 	if (argc < 5)
-		return (10);
+		return (count_eror());
 	len = argc - 3;
 	fd = initiate_fd(len);
 	if (!fd)
+	{
+		ft_putstr_fd("Malloc failed!\n", 2);
 		return (10);
+	}
 	create_pipes_process(argc, argv, env, fd);
 	if (errno != 0)
 	{

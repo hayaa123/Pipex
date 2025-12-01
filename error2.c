@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 17:21:17 by haya              #+#    #+#             */
-/*   Updated: 2025/11/23 15:42:36 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/01 10:22:22 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,10 @@ void	free_cmd_and_error(char **cmd, void (*f)())
 	if (cmd)
 		free_splitted(cmd);
 	return (f());
+}
+
+int	count_eror(void)
+{
+	ft_putstr_fd("The programm accept at least 4 parameters.\n", 2);
+	return (10);
 }

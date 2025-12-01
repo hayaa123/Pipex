@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 15:25:07 by hal-lawa          #+#    #+#             */
-/*   Updated: 2025/11/23 15:33:58 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/01 10:21:59 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,6 @@ int		**initiate_fd(int len);
 void	create_a_process(char **cmd, char *env[], int input, int output);
 void	safe_close(int fd, char *msg);
 void	free_cmd_and_error(char **cmd, void (*f)());
+int		count_eror(void);
 
 #endif

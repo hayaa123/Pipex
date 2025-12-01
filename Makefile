@@ -1,6 +1,6 @@
 NAME = pipex
 CC= cc
-CFLAGS= -Wall -Werror -Wextra -I./libft -g
+CFLAGS= -Wall -Werror -Wextra -I./libft
 LIB =pipex.a
 LIBFT_DIR= ./libft/
 SRC = utils.c prepare.c error1.c error2.c clear.c utils2.c
@@ -19,7 +19,7 @@ OBJ := $(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(LIB) main.c
-	cc main.c -L. $(LIB) -I./libft -o $(NAME)
+	cc main.c $(CFLAGS) -L. $(LIB) -I./libft -o $(NAME)
 
 $(LIB): $(LIBFT_OBJ) $(OBJ)
 	ar rcs $(LIB) $(LIBFT_OBJ) $(OBJ)
