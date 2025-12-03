@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 21:10:03 by haya              #+#    #+#             */
-/*   Updated: 2025/12/01 10:23:10 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/03 22:06:19 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,22 +47,19 @@ static void	create_pipes_process(int argc, char **argv, char *env[], int **fd)
 
 	i = 0;
 	create_pipes(argc, fd);
-	while (i < (argc - 3))
+	while (i <= (argc - 3))
 	{
-		if (errno != 0)
-			return ;
 		cmd = prepare_aruments(argv[i + 2], env);
 		if (!cmd || errno != 0)
-			return (free_cmd_and_error(cmd, command_error));
+			command_error();
 		input = set_input(argc, argv, fd, i);
+		ft_printf("input : %i\n",input);
 		output = set_output(argc, argv, fd, i);
 		if (input == -1 || output == -1)
-			return (free_cmd_and_error(cmd, open_file_error));
+			open_file_error();
 		create_a_process(cmd, env, input, output);
 		close_files(fd, i, input, argc);
 		free_splitted(cmd);
-		if (errno != 0)
-			return ;
 		i++;
 	}
 }
@@ -88,7 +85,8 @@ int	main(int argc, char **argv, char *env[])
 	if (argc < 5)
 		return (count_eror());
 	len = argc - 3;
-	fd = initiate_fd(len);
+	ft_printf("len: %d\n",len);
+	fd = initiate_fd(len - 1);
 	if (!fd)
 	{
 		ft_putstr_fd("Malloc failed!\n", 2);
@@ -97,10 +95,10 @@ int	main(int argc, char **argv, char *env[])
 	create_pipes_process(argc, argv, env, fd);
 	if (errno != 0)
 	{
-		free_fd(fd, len);
+		free_fd(fd, len - 1);
 		return (errno);
 	}
-	free_fd(fd, len);
+	free_fd(fd, len - 1);
 	wait_all_process(argc);
 	return (0);
 }

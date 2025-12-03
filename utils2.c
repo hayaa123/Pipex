@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 10:36:25 by haya              #+#    #+#             */
-/*   Updated: 2025/11/23 11:56:42 by haya             ###   ########.fr       */
+/*   Updated: 2025/12/03 22:08:29 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	safe_close(int fd, char *msg)
 {
+	if (fd == -1)
+		return ;
 	if (close(fd) == -1)
 		perror(msg);
 }
@@ -27,6 +29,8 @@ void	create_a_process(char **cmd, char *env[], int input, int output)
 		return (fork_error());
 	if (id == 0)
 	{
+		if (input == -1)
+			exit(0);
 		if (dup2(input, 0) == -1)
 			exit(dup2_error());
 		if (dup2(output, 1) == -1)

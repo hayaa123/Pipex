@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clear.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 17:21:53 by haya              #+#    #+#             */
-/*   Updated: 2025/11/23 15:36:02 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/03 21:32:17 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,9 @@ void	free_fd(int **fd, int len)
 void	free_splitted(char **splitted)
 {
 	int	i;
-
+	
+	if (!splitted)
+		return ;
 	i = 0;
 	while (splitted[i])
 	{
