@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 21:10:03 by haya              #+#    #+#             */
-/*   Updated: 2025/12/03 22:06:19 by haya             ###   ########.fr       */
+/*   Updated: 2025/12/03 22:41:55 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,17 +47,17 @@ static void	create_pipes_process(int argc, char **argv, char *env[], int **fd)
 
 	i = 0;
 	create_pipes(argc, fd);
-	while (i <= (argc - 3))
+	while (i < (argc - 3))
 	{
 		cmd = prepare_aruments(argv[i + 2], env);
 		if (!cmd || errno != 0)
 			command_error();
 		input = set_input(argc, argv, fd, i);
-		ft_printf("input : %i\n",input);
 		output = set_output(argc, argv, fd, i);
 		if (input == -1 || output == -1)
 			open_file_error();
-		create_a_process(cmd, env, input, output);
+		if (input != -1 && output != -1 && cmd)
+			create_a_process(cmd, env, input, output);
 		close_files(fd, i, input, argc);
 		free_splitted(cmd);
 		i++;
