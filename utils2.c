@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 10:36:25 by haya              #+#    #+#             */
-/*   Updated: 2025/12/03 22:23:11 by haya             ###   ########.fr       */
+/*   Updated: 2025/12/03 23:51:53 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,11 @@ void	create_a_process(char **cmd, char *env[], int input, int output)
 		safe_close(input, "input close");
 		safe_close(output, "output close");
 		if (execve(cmd[0], cmd, env) == -1)
+		{
+			free_splitted(cmd);
 			exit(execve_error());
+		}
+		free_splitted(cmd);
 		exit(0);
 	}
 }

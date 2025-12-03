@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 15:25:07 by hal-lawa          #+#    #+#             */
-/*   Updated: 2025/12/01 10:21:59 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/03 23:02:54 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int		dup2_error(void);
 int		execve_error(void);
 void	pipe_error(void);
 void	open_file_error(void);
-void	command_error(void);
+void	command_error(char *cmd);
 int		set_output(int argc, char **argv, int **fd, int i);
 int		set_input(int argc, char **argv, int **fd, int i);
 int		**initiate_fd(int len);
