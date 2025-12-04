@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 21:10:03 by haya              #+#    #+#             */
-/*   Updated: 2025/12/04 00:02:34 by haya             ###   ########.fr       */
+/*   Updated: 2025/12/04 17:30:18 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,30 @@ static void	create_pipes(int argc, int **fd)
 
 static void	close_files(int **fd, int i, int input, int argc)
 {
-	if (i > 0)
-	{
-		safe_close(fd[i - 1][0], "pipe read close");
-	}
+
+	// if (i > 0)
+	// {
+	// 	safe_close(fd[i - 1][0], "pipe read close");
+	// }
 	if (i < (argc - 4))
 	{
 		safe_close(fd[i][1], "pipe write close");
 	}
 	if (i == 0)
 		safe_close(input, "input close");
+}
+
+void	print_fd_table(int **fd, int pipes, const char *msg)
+{
+	printf("\n===== FD TABLE DEBUG: %s =====\n", msg);
+
+	for (int i = 0; i < pipes; i++)
+	{
+		printf("Pipe %d: read_fd = %d, write_fd = %d\n",
+				i, fd[i][0], fd[i][1]);
+	}
+
+	printf("===== END FD TABLE =====\n\n");
 }
 
 static void	create_pipes_process(int argc, char **argv, char *env[], int **fd)
@@ -51,6 +65,7 @@ static void	create_pipes_process(int argc, char **argv, char *env[], int **fd)
 
 	i = 0;
 	create_pipes(argc, fd);
+	print_fd_table(fd, argc - 4, "After create_pipes");
 	while (i < (argc - 3))
 	{
 		input = set_input(argc, argv, fd, i);
@@ -68,17 +83,36 @@ static void	create_pipes_process(int argc, char **argv, char *env[], int **fd)
 		free_splitted(cmd);
 		i++;
 	}
+	
 }
 
-static void	wait_all_process(int argc)
+static int wait_all_process(int argc)
 {
 	int	i;
 	int	status;
-
+	int code;
+	
 	i = 0;
 	while (i < (argc - 3))
 	{
 		waitpid(-1, &status, 0);
+		if (WIFEXITED(status))
+		{
+			code = WEXITSTATUS(status);
+		}
+		i++;
+	}
+	return code;
+}
+
+void close_readers(int **fd, int len)
+{
+	int i;
+	
+	i = 0;
+	while(i < len)
+	{
+		safe_close(fd[i][0],"pipe read close");
 		i++;
 	}
 }
@@ -103,7 +137,9 @@ int	main(int argc, char **argv, char *env[])
 		free_fd(fd, len - 1);
 		return (errno);
 	}
+	int code = wait_all_process(argc);
+	close_readers(fd,len -1);
 	free_fd(fd, len - 1);
-	wait_all_process(argc);
-	return (0);
+	return (code);
 }
+

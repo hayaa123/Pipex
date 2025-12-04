@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 10:36:25 by haya              #+#    #+#             */
-/*   Updated: 2025/12/03 23:51:53 by haya             ###   ########.fr       */
+/*   Updated: 2025/12/04 17:22:35 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ void	safe_close(int fd, char *msg)
 	if (close(fd) == -1)
 		perror(msg);
 }
-
+/**
+ * @brief creates a child
+ */
 void	create_a_process(char **cmd, char *env[], int input, int output)
 {
 	int	id;
