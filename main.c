@@ -6,7 +6,7 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 21:10:03 by haya              #+#    #+#             */
-/*   Updated: 2025/12/05 21:04:09 by haya             ###   ########.fr       */
+/*   Updated: 2025/12/05 22:15:48 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,41 +41,53 @@ static void close_readers(int **fd)
 
 static void	close_files(int **fd, int i, int in_out[], int argc)
 {
-
-		if (i < (argc - 4))
-			safe_close(&fd[i][1], "pipe write close");
-		if (i == 0)
-			safe_close(&in_out[0], "input close");
-		if (i == (argc - 4) && in_out[1] != -1)
-			safe_close(&in_out[1], "output close");	
+	// if (in_out[0] == -1)
+	// 	safe_close(&in_out[1], "out close");
+	// else if (in_out[1] == -1)
+	// 	safe_close(&in_out[0], "input close");
+	// if (errno != 0)
+	// 	safe_close(&in_out[1], "pipe write close");
+	// else{
+	ft_printf("in_out:[%d,%d]\n", in_out[0], in_out[1]);
+	if (i < (argc - 4))
+		safe_close(&fd[i][1], "pipe write close");
+	if (i == 0)
+	{
+		if (in_out[0] == -1)
+			safe_close(&in_out[1], "out close");
+		safe_close(&in_out[0], "input close");
+	}
+	if (i == (argc - 4) && in_out[1] != -1)
+	{
+		safe_close(&in_out[1], "output close");	
+	}
+	// }
 }
 
-
-// static void	handle_error(char **cmd, int *in_out, int **fd, int *i)
+// void	print_fd_table(int **fd, int pipes, const char *msg)
 // {
-// 	if (in_out[0] == -1 || in_out[1] == -1)
-// 		open_file_error();
-// 	else
-//     	command_error();
-//     close_files(fd, *i, in_out, 0);
-//     free_splitted(cmd);
-// 	(*i)++;
-// }
+// 	printf("\n===== FD TABLE DEBUG: %s =====\n", msg);
 
-static void	handle_error(int *in_out, int **fd, int *i, int argc)
+// 	for (int i = 0; i < pipes; i++)
+// 	{
+// 		printf("Pipe %d: read_fd = %d, write_fd = %d\n",
+// 				i, fd[i][0], fd[i][1]);
+// 	}
+
+// 	printf("===== END FD TABLE =====\n\n");
+// }
+static void	handle_error(char **cmd, int *in_out, int **fd, int *i)
 {
 	if (in_out[0] == -1 || in_out[1] == -1)
 		open_file_error();
 	else
     	command_error();
-    
-    // Close all pipe ends for this process
-    if (*i > 0 && *i < argc - 3)
-        safe_close(&fd[*i - 1][0], "pipe read close in error");
-    if (*i < argc - 4)
-        safe_close(&fd[*i][1], "pipe write close in error");
-    
-    // free_splitted(cmd);
+    close_files(fd, *i, in_out, 0);
+	// if (!cmd)
+	// {
+	// 	safe_close(&fd[*i][1],"msg");
+	// }
+    free_splitted(cmd);
 	(*i)++;
 }
 
@@ -93,14 +105,13 @@ static void	create_pipes_process(int argc, char **argv, char *env[], int **fd)
 		in_out[1] = set_output(argc, argv, fd, i);
 		if (in_out[0] == -1 || in_out[1] == -1)
 		{
-			handle_error(in_out, fd, &i, argc);
+			handle_error(NULL, in_out, fd, &i);
 			continue;
 		}
 		cmd = prepare_aruments(argv[i + 2], env);
 		if (!cmd || errno != 0)
 		{
-			handle_error(in_out, fd, &i, argc);
-			free_splitted(cmd);
+			handle_error(cmd, in_out, fd, &i);
 			continue;
 		}
 		create_a_process(cmd, env, in_out, fd);
