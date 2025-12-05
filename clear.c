@@ -6,18 +6,18 @@
 /*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 17:21:53 by haya              #+#    #+#             */
-/*   Updated: 2025/12/03 21:32:17 by haya             ###   ########.fr       */
+/*   Updated: 2025/12/05 15:41:36 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	free_fd(int **fd, int len)
+void	free_fd(int **fd)
 {
 	int	i;
 
 	i = 0;
-	while (i < len)
+	while (fd[i])
 	{
 		free(fd[i]);
 		i++;
@@ -40,10 +40,10 @@ void	free_splitted(char **splitted)
 	free(splitted);
 }
 
-void	clear_all(int **fd, int len, char **cmd)
+void	clear_all(int **fd, char **cmd)
 {
 	if (cmd)
 		free_splitted(cmd);
 	if (fd)
-		free_fd(fd, len);
+		free_fd(fd);
 }

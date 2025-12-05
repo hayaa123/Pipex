@@ -1,6 +1,6 @@
 NAME = pipex
 CC= cc
-CFLAGS= -Wall -Werror -Wextra -I./libft
+CFLAGS= -Wall -Werror -Wextra -I./libft -g
 LIB =pipex.a
 LIBFT_DIR= ./libft/
 SRC = utils.c prepare.c error1.c error2.c clear.c utils2.c

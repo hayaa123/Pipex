@@ -1,0 +1,22 @@
+total 376
+-rw-r--r-- 1 haya haya   1506 Dec  5 21:05 Makefile
+-rw-r--r-- 1 haya haya   1266 Dec  5 15:41 clear.c
+-rw-r--r-- 1 haya haya   7296 Dec  5 21:12 clear.o
+-rw-r--r-- 1 haya haya   1353 Dec  5 18:00 error1.c
+-rw-r--r-- 1 haya haya   7304 Dec  5 21:12 error1.o
+-rw-r--r-- 1 haya haya   1254 Dec  2 21:12 error2.c
+-rw-r--r-- 1 haya haya   7576 Dec  5 21:12 error2.o
+-rw-r--r-- 1 haya haya      3 Dec  5 14:22 infile
+drwxr-xr-x 2 haya haya   4096 Dec  5 21:12 libft
+-rw-r--r-- 1 haya haya   3482 Dec  5 21:04 main.c
+-rw-r--r-- 1 haya haya      0 Dec  3 23:49 out2
+-rw-r--r-- 1 haya haya      0 Dec  5 21:12 outfile
+-rwxr-xr-x 1 haya haya  49968 Dec  5 21:12 pipex
+-rw-r--r-- 1 haya haya 225560 Dec  5 21:12 pipex.a
+-rw-r--r-- 1 haya haya   1743 Dec  5 17:21 pipex.h
+-rw-r--r-- 1 haya haya   1235 Dec  2 21:12 prepare.c
+-rw-r--r-- 1 haya haya   6824 Dec  5 21:12 prepare.o
+-rw-r--r-- 1 haya haya   1674 Dec  2 21:12 utils.c
+-rw-r--r-- 1 haya haya   8400 Dec  5 21:12 utils.o
+-rw-r--r-- 1 haya haya   2723 Dec  5 21:12 utils2.c
+-rw-r--r-- 1 haya haya  10432 Dec  5 21:12 utils2.o

@@ -3,26 +3,49 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 10:36:25 by haya              #+#    #+#             */
-/*   Updated: 2025/12/04 17:22:35 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/05 21:12:28 by haya             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	safe_close(int fd, char *msg)
+void	safe_close(int *fd, char *msg)
 {
-	if (fd == -1)
+	if ((*fd) == -1)
 		return ;
-	if (close(fd) == -1)
+	if (close(*fd) == -1)
 		perror(msg);
+	(*fd) = -1;
 }
+
+static void close_files(int **fd)
+{
+    int i = 0;
+
+    while (fd[i])
+    {
+        if (fd[i][0] != -1)
+            if (close(fd[i][0]) == -1)
+                perror("Read end of the pipe");
+        if (fd[i][1] != -1)
+		{
+            if (close(fd[i][1]) == -1){
+                perror("Write end of the pipe");
+			}
+		}
+        i++;
+    }
+}
+
+
+
 /**
  * @brief creates a child
  */
-void	create_a_process(char **cmd, char *env[], int input, int output)
+void	create_a_process(char **cmd, char *env[], int in_out[], int **fd)
 {
 	int	id;
 
@@ -31,21 +54,18 @@ void	create_a_process(char **cmd, char *env[], int input, int output)
 		return (fork_error());
 	if (id == 0)
 	{
-		if (input == -1)
+		if (in_out[0] == -1)
 			exit(0);
-		if (dup2(input, 0) == -1)
+		if (dup2(in_out[0], 0) == -1)
 			exit(dup2_error());
-		if (dup2(output, 1) == -1)
+		if (dup2(in_out[1], 1) == -1)
 			exit(dup2_error());
-		safe_close(input, "input close");
-		safe_close(output, "output close");
+		close_files(fd);
 		if (execve(cmd[0], cmd, env) == -1)
 		{
 			free_splitted(cmd);
 			exit(execve_error());
 		}
-		free_splitted(cmd);
-		exit(0);
 	}
 }
 
@@ -55,7 +75,7 @@ int	**initiate_fd(int len)
 	int	i;
 
 	i = 0;
-	fd = malloc(sizeof(int *) * (len));
+	fd = malloc(sizeof(int *) * (len + 1));
 	if (!fd)
 		return (NULL);
 	while (i < len)
@@ -63,11 +83,12 @@ int	**initiate_fd(int len)
 		fd[i] = malloc(sizeof(int) * 2);
 		if (!fd[i])
 		{
-			free_fd(fd, i);
+			free_fd(fd);
 			return (NULL);
 		}
 		i++;
 	}
+	fd[i] = NULL;
 	return (fd);
 }
 
