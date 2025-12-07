@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 10:36:25 by haya              #+#    #+#             */
-/*   Updated: 2025/12/05 21:47:01 by haya             ###   ########.fr       */
+/*   Updated: 2025/12/07 13:46:18 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,23 +21,27 @@ void	safe_close(int *fd, char *msg)
 	(*fd) = -1;
 }
 
-static void close_files(int **fd)
+static void close_files(t_pipex p)
 {
-    int i = 0;
+    int i;
 
-    while (fd[i])
+    i = 0;
+    while (p.fds[i])
     {
-        if (fd[i][0] != -1)
-            if (close(fd[i][0]) == -1)
+        if (p.fds[i][0] != -1)
+            if (close(p.fds[i][0]) == -1)
                 perror("Read end of the pipe");
-        if (fd[i][1] != -1)
+        if (p.fds[i][1] != -1)
 		{
-            if (close(fd[i][1]) == -1){
+            if (close(p.fds[i][1]) == -1){
                 perror("Write end of the pipe");
 			}
 		}
         i++;
     }
+    close(p.infile);
+    close(p.outfile);
+
 }
 
 
@@ -45,7 +49,7 @@ static void close_files(int **fd)
 /**
  * @brief creates a child
  */
-void	create_a_process(char **cmd, char *env[], int in_out[], int **fd)
+void	create_a_process(char **cmd, int in_out[], t_pipex p)
 {
 	int	id;
 
@@ -60,13 +64,12 @@ void	create_a_process(char **cmd, char *env[], int in_out[], int **fd)
 			exit(dup2_error());
 		if (dup2(in_out[1], 1) == -1)
 			exit(dup2_error());
-		close_files(fd);
-		if (execve(cmd[0], cmd, env) == -1)
-		{
-			free_splitted(cmd);
-			exit(execve_error());
-		}
+		close_files(p);
+		execve(cmd[0], cmd, p.env);
+		free_splitted(cmd);
+		exit(execve_error());
 	}
+	p.last_id = id;
 }
 
 int	**initiate_fd(int len)
@@ -92,36 +95,52 @@ int	**initiate_fd(int len)
 	return (fd);
 }
 
-int	set_input(int argc, char **argv, int **fd, int i)
+t_pipex initialte_pipex(int argc, char** argv, char** env)
+{
+	t_pipex pipex;
+	int input;
+	int output;
+
+	if (access(argv[1], R_OK) == -1)
+		input = -1;
+	else
+		input = open(argv[1], O_RDWR);
+	if (access(argv[argc - 1], R_OK) == -1)
+		output = -1;
+	else
+		output = open(argv[argc - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
+
+	pipex.pipe_count = argc - 4;
+	pipex.argc = argc;
+	pipex.argv = argv;
+	pipex.env = env;
+	pipex.fds = initiate_fd(pipex.pipe_count);
+	pipex.infile = input;
+	pipex.outfile = output;
+	pipex.last_id = -1;
+	return (pipex);
+}
+
+int	set_input(t_pipex pipex, int i)
 {
 	int	input;
 
 	if (i == 0)
-	{
-		input = open(argv[1], O_RDWR);
-		if (input == -1 || access(argv[1], R_OK) == -1)
-			return (-1);
-	}
-	else if (i == (argc - 4))
-		input = fd[i - 1][0];
+		input = pipex.infile;
 	else
-		input = fd[i - 1][0];
+		input = pipex.fds[i - 1][0];
 	return (input);
 }
 
-int	set_output(int argc, char **argv, int **fd, int i)
+int	set_output(t_pipex p, int i)
 {
 	int	output;
 
 	if (i == 0)
-		output = fd[0][1];
-	else if (i == (argc - 4))
-	{
-		output = open(argv[argc - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
-		if (output == -1)
-			return (-1);
-	}
+		output = p.fds[0][1];
+	else if (i == p.pipe_count)
+		output = p.outfile;
 	else
-		output = fd[i][1];
+		output = p.fds[i][1];
 	return (output);
 }

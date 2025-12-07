@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: haya <haya@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 15:25:07 by hal-lawa          #+#    #+#             */
-/*   Updated: 2025/12/05 17:21:59 by haya             ###   ########.fr       */
+/*   Updated: 2025/12/07 13:45:50 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,18 @@
 # include <unistd.h>
 # include <wait.h>
 
+typedef struct s_pipex {
+  int argc;
+  char **argv;
+  int   comand_count;
+  int **fds;
+  int pipe_count;
+  char **env;
+  int last_id;
+  int infile;
+  int outfile;
+} t_pipex;
+
 char	*absoulute_path(char *cmd, char *env[]);
 void	free_splitted(char **splitted);
 char	**prepare_aruments(char *arg, char *env[]);
@@ -32,12 +44,13 @@ int		execve_error(void);
 void	pipe_error(void);
 void	open_file_error(void);
 void	command_error();
-int		set_output(int argc, char **argv, int **fd, int i);
-int		set_input(int argc, char **argv, int **fd, int i);
+int     set_output(t_pipex p, int i);
+int     set_input(t_pipex pipex, int i);
 int		**initiate_fd(int len);
-void	create_a_process(char **cmd, char *env[], int in_out[], int **fd);
+void	create_a_process(char **cmd, int in_out[], t_pipex p);
 void	safe_close(int *fd, char *msg);
 void	free_cmd_and_error(char **cmd, void (*f)());
 int		count_eror(void);
+t_pipex initialte_pipex(int argc, char** argv, char** env);
 
 #endif
