@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 10:36:25 by haya              #+#    #+#             */
-/*   Updated: 2025/12/08 10:28:59 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/08 10:47:34 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,7 @@ t_pipex	initialte_pipex(int argc, char **argv, char **env)
 		input = -1;
 	else
 		input = open(argv[1], O_RDWR);
-	if (access(argv[argc - 1], R_OK) == -1)
-		output = -1;
-	else
-		output = open(argv[argc - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
+	output = open(argv[argc - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
 	pipex.pipe_count = argc - 4;
 	pipex.argc = argc;
 	pipex.argv = argv;
