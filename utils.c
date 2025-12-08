@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 17:22:20 by haya              #+#    #+#             */
-/*   Updated: 2025/11/23 15:37:25 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/08 09:59:29 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,28 @@ char	*absoulute_path(char *cmd, char *env[])
 	}
 	free_splitted(paths);
 	return (NULL);
+}
+
+int	set_input(t_pipex pipex, int i)
+{
+	int	input;
+
+	if (i == 0)
+		input = pipex.infile;
+	else
+		input = pipex.fds[i - 1][0];
+	return (input);
+}
+
+int	set_output(t_pipex p, int i)
+{
+	int	output;
+
+	if (i == 0)
+		output = p.fds[0][1];
+	else if (i == p.pipe_count)
+		output = p.outfile;
+	else
+		output = p.fds[i][1];
+	return (output);
 }
