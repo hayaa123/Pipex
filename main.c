@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 21:10:03 by haya              #+#    #+#             */
-/*   Updated: 2025/12/08 10:49:32 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/08 12:13:07 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,21 @@ static void	create_pipes_process(t_pipex p)
 			handle_error(cmd, in_out, p, &i);
 			continue ;
 		}
-		create_a_process(cmd, in_out, p);
+		create_a_process(cmd, in_out, &p);
 		close_files(p, i, in_out);
 		free_splitted(cmd);
 		i++;
+	}
+}
+
+void	close_all_pipes(int **fd, int pipe_count)
+{
+	int	i;
+
+	for (i = 0; i < pipe_count; i++)
+	{
+		safe_close(&fd[i][0], "pipe read close");
+		safe_close(&fd[i][1], "pipe write close");
 	}
 }
 
@@ -75,7 +86,9 @@ static int	wait_all_process(t_pipex p)
 	waitpid(p.last_id, &status, 0);
 	while (wait(NULL) > 0)
 		;
-	return (status);
+	if (WIFEXITED(status))
+        return WEXITSTATUS(status);
+    return 1;
 }
 
 int	main(int argc, char **argv, char *env[])
@@ -93,8 +106,8 @@ int	main(int argc, char **argv, char *env[])
 	}
 	create_pipes(argc, pipex.fds);
 	create_pipes_process(pipex);
+	close_all_pipes(pipex.fds, pipex.pipe_count);
 	code = wait_all_process(pipex);
-	close_readers(pipex.fds);
 	free_fd(pipex.fds);
 	return (code);
 }

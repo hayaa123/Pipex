@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 10:36:25 by haya              #+#    #+#             */
-/*   Updated: 2025/12/08 10:47:34 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/08 12:09:12 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,10 @@ static void	ch_close_files(t_pipex p)
 	}
 	close(p.infile);
 	close(p.outfile);
+	
 }
 
-void	create_a_process(char **cmd, int in_out[], t_pipex p)
+void	create_a_process(char **cmd, int in_out[], t_pipex *p)
 {
 	int	id;
 
@@ -59,12 +60,12 @@ void	create_a_process(char **cmd, int in_out[], t_pipex p)
 			exit(dup2_error());
 		if (dup2(in_out[1], 1) == -1)
 			exit(dup2_error());
-		ch_close_files(p);
-		execve(cmd[0], cmd, p.env);
+		ch_close_files(*p);
+		execve(cmd[0], cmd, p->env);
 		free_splitted(cmd);
 		exit(execve_error());
 	}
-	p.last_id = id;
+	p->last_id = id;
 }
 
 int	**initiate_fd(int len)
@@ -101,6 +102,11 @@ t_pipex	initialte_pipex(int argc, char **argv, char **env)
 	else
 		input = open(argv[1], O_RDWR);
 	output = open(argv[argc - 1], O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (output < 0)
+	{
+		perror(argv[4]);
+		exit(1);
+	}
 	pipex.pipe_count = argc - 4;
 	pipex.argc = argc;
 	pipex.argv = argv;

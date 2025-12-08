@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 17:22:20 by haya              #+#    #+#             */
-/*   Updated: 2025/12/08 09:59:29 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/08 12:05:40 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static char	*get_path(char *env[])
 	int		i;
 
 	i = 0;
+	path = NULL;
 	while (env[i])
 	{
 		if (ft_strnstr(env[i], "PATH=", 5))
