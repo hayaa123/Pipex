@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 21:10:03 by haya              #+#    #+#             */
-/*   Updated: 2025/12/01 10:23:10 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/08 10:26:23 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,79 +28,73 @@ static void	create_pipes(int argc, int **fd)
 	}
 }
 
-static void	close_files(int **fd, int i, int input, int argc)
+static void	handle_error(char **cmd, int *in_out, t_pipex p, int *i)
 {
-	if (i > 0)
-		safe_close(fd[i - 1][0], "pipe read close");
-	if (i < (argc - 4))
-		safe_close(fd[i][1], "pipe write close");
-	if (i == 0)
-		safe_close(input, "input close");
+	if (in_out[0] == -1 || in_out[1] == -1)
+		open_file_error();
+	else
+		command_error();
+	close_files(p, *i, in_out);
+	free_splitted(cmd);
+	(*i)++;
 }
 
-static void	create_pipes_process(int argc, char **argv, char *env[], int **fd)
+static void	create_pipes_process(t_pipex p)
 {
 	int		i;
 	char	**cmd;
-	int		input;
-	int		output;
+	int		in_out[2];
 
 	i = 0;
-	create_pipes(argc, fd);
-	while (i < (argc - 3))
+	while (i < (p.argc - 3))
 	{
-		if (errno != 0)
-			return ;
-		cmd = prepare_aruments(argv[i + 2], env);
+		in_out[0] = set_input(p, i);
+		in_out[1] = set_output(p, i);
+		if (in_out[0] == -1 || in_out[1] == -1)
+		{
+			handle_error(NULL, in_out, p, &i);
+			continue ;
+		}
+		cmd = prepare_aruments(p.argv[i + 2], p.env);
 		if (!cmd || errno != 0)
-			return (free_cmd_and_error(cmd, command_error));
-		input = set_input(argc, argv, fd, i);
-		output = set_output(argc, argv, fd, i);
-		if (input == -1 || output == -1)
-			return (free_cmd_and_error(cmd, open_file_error));
-		create_a_process(cmd, env, input, output);
-		close_files(fd, i, input, argc);
+		{
+			handle_error(cmd, in_out, p, &i);
+			continue ;
+		}
+		create_a_process(cmd, in_out, p);
+		close_files(p, i, in_out);
 		free_splitted(cmd);
-		if (errno != 0)
-			return ;
 		i++;
 	}
 }
 
-static void	wait_all_process(int argc)
+static int	wait_all_process(t_pipex p)
 {
-	int	i;
 	int	status;
 
-	i = 0;
-	while (i < (argc - 3))
-	{
-		waitpid(-1, &status, 0);
-		i++;
-	}
+	waitpid(p.last_id, &status, 0);
+	while (wait(NULL) > 0)
+		;
+	return (status);
 }
 
 int	main(int argc, char **argv, char *env[])
 {
-	int	**fd;
-	int	len;
+	t_pipex	pipex;
+	int		code;
 
 	if (argc < 5)
 		return (count_eror());
-	len = argc - 3;
-	fd = initiate_fd(len);
-	if (!fd)
+	pipex = initialte_pipex(argc, argv, env);
+	if (!pipex.fds)
 	{
 		ft_putstr_fd("Malloc failed!\n", 2);
 		return (10);
 	}
-	create_pipes_process(argc, argv, env, fd);
-	if (errno != 0)
-	{
-		free_fd(fd, len);
-		return (errno);
-	}
-	free_fd(fd, len);
-	wait_all_process(argc);
-	return (0);
+	create_pipes(argc, pipex.fds);
+	create_pipes_process(pipex);
+	code = wait_all_process(pipex);
+	close_readers(pipex.fds);
+	free_fd(pipex.fds);
+	return (code);
 }

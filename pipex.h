@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 15:25:07 by hal-lawa          #+#    #+#             */
-/*   Updated: 2025/12/01 10:21:59 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/08 10:00:41 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,23 +21,39 @@
 # include <unistd.h>
 # include <wait.h>
 
-char	*absoulute_path(char *cmd, char *env[]);
-void	free_splitted(char **splitted);
-char	**prepare_aruments(char *arg, char *env[]);
-void	free_fd(int **fd, int len);
-void	clear_all(int **fd, int len, char **cmd);
-void	fork_error(void);
-int		dup2_error(void);
-int		execve_error(void);
-void	pipe_error(void);
-void	open_file_error(void);
-void	command_error(void);
-int		set_output(int argc, char **argv, int **fd, int i);
-int		set_input(int argc, char **argv, int **fd, int i);
-int		**initiate_fd(int len);
-void	create_a_process(char **cmd, char *env[], int input, int output);
-void	safe_close(int fd, char *msg);
-void	free_cmd_and_error(char **cmd, void (*f)());
-int		count_eror(void);
+typedef struct s_pipex
+{
+	int		argc;
+	char	**argv;
+	int		comand_count;
+	int		**fds;
+	int		pipe_count;
+	char	**env;
+	int		last_id;
+	int		infile;
+	int		outfile;
+}			t_pipex;
+
+char		*absoulute_path(char *cmd, char *env[]);
+void		free_splitted(char **splitted);
+char		**prepare_aruments(char *arg, char *env[]);
+void		free_fd(int **fd);
+void		clear_all(int **fd, char **cmd);
+void		fork_error(void);
+int			dup2_error(void);
+int			execve_error(void);
+void		pipe_error(void);
+void		open_file_error(void);
+void		command_error(void);
+int			set_output(t_pipex p, int i);
+int			set_input(t_pipex pipex, int i);
+int			**initiate_fd(int len);
+void		create_a_process(char **cmd, int in_out[], t_pipex p);
+void		safe_close(int *fd, char *msg);
+void		free_cmd_and_error(char **cmd, void (*f)());
+int			count_eror(void);
+t_pipex		initialte_pipex(int argc, char **argv, char **env);
+void		close_readers(int **fd);
+void		close_files(t_pipex p, int i, int in_out[]);
 
 #endif

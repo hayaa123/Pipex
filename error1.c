@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 17:20:48 by haya              #+#    #+#             */
-/*   Updated: 2025/11/23 15:36:19 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/08 10:03:41 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	open_file_error(void)
 
 void	command_error(void)
 {
-	perror("command not found");
+	ft_putstr_fd("command not found\n", 2);
 	return ;
 }
 
