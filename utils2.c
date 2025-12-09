@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 10:36:25 by haya              #+#    #+#             */
-/*   Updated: 2025/12/08 12:09:12 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/09 13:49:29 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,27 +45,40 @@ static void	ch_close_files(t_pipex p)
 	
 }
 
-void	create_a_process(char **cmd, int in_out[], t_pipex *p)
+void	create_a_process(char **cmd, int in_out[], t_pipex *p, int i)
 {
-	int	id;
+	pid_t	id;
 
 	id = fork();
 	if (id == -1)
 		return (fork_error());
 	if (id == 0)
 	{
+		if (!cmd)
+		{
+			ch_close_files(*p);
+			free_splitted(cmd);
+			exit(127);
+		}
 		if (in_out[0] == -1)
-			exit(0);
+			exit(1);
 		if (dup2(in_out[0], 0) == -1)
 			exit(dup2_error());
 		if (dup2(in_out[1], 1) == -1)
 			exit(dup2_error());
 		ch_close_files(*p);
-		execve(cmd[0], cmd, p->env);
-		free_splitted(cmd);
-		exit(execve_error());
+		if (execve(cmd[0], cmd, p->env) == -1)
+		{
+			free_splitted(cmd);
+			exit(execve_error());
+		}
 	}
-	p->last_id = id;
+	else
+		if (i == p->pipe_count )
+		{
+		ft_printf("inside child id: %i , i:%i\n",id,i);
+			p->last_id = id;
+		}
 }
 
 int	**initiate_fd(int len)

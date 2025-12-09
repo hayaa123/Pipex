@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 15:25:07 by hal-lawa          #+#    #+#             */
-/*   Updated: 2025/12/08 11:19:08 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/09 11:59:24 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void		command_error(void);
 int			set_output(t_pipex p, int i);
 int			set_input(t_pipex pipex, int i);
 int			**initiate_fd(int len);
-void	create_a_process(char **cmd, int in_out[], t_pipex *p);
+void	create_a_process(char **cmd, int in_out[], t_pipex *p, int i);
 void		safe_close(int *fd, char *msg);
 void		free_cmd_and_error(char **cmd, void (*f)());
 int			count_eror(void);
