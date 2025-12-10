@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 17:20:48 by haya              #+#    #+#             */
-/*   Updated: 2025/12/08 10:03:41 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/10 09:57:46 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,27 @@ void	fork_error(void)
 	return ;
 }
 
-void	open_file_error(void)
+int	open_file_error(void)
 {
 	perror("open file error");
-	return ;
+	return (errno);
 }
 
-void	command_error(void)
+int	command_error(void)
 {
 	ft_putstr_fd("command not found\n", 2);
-	return ;
+	return (127);
 }
 
 void	pipe_error(void)
 {
 	perror("Pipe error");
 	return ;
+}
+
+void	error_exit(char **cmd, t_pipex *p, int f(void))
+{
+	ch_close_files(*p);
+	free_splitted(cmd);
+	exit(f());
 }

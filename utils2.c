@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 10:36:25 by haya              #+#    #+#             */
-/*   Updated: 2025/12/09 13:49:29 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/10 10:05:34 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	safe_close(int *fd, char *msg)
 	(*fd) = -1;
 }
 
-static void	ch_close_files(t_pipex p)
+void	ch_close_files(t_pipex p)
 {
 	int	i;
 
@@ -42,7 +42,6 @@ static void	ch_close_files(t_pipex p)
 	}
 	close(p.infile);
 	close(p.outfile);
-	
 }
 
 void	create_a_process(char **cmd, int in_out[], t_pipex *p, int i)
@@ -55,30 +54,17 @@ void	create_a_process(char **cmd, int in_out[], t_pipex *p, int i)
 	if (id == 0)
 	{
 		if (!cmd)
-		{
-			ch_close_files(*p);
-			free_splitted(cmd);
-			exit(127);
-		}
-		if (in_out[0] == -1)
-			exit(1);
+			error_exit(cmd, p, command_error);
 		if (dup2(in_out[0], 0) == -1)
-			exit(dup2_error());
+			error_exit(cmd, p, dup2_error);
 		if (dup2(in_out[1], 1) == -1)
-			exit(dup2_error());
+			error_exit(cmd, p, dup2_error);
 		ch_close_files(*p);
 		if (execve(cmd[0], cmd, p->env) == -1)
-		{
-			free_splitted(cmd);
-			exit(execve_error());
-		}
+			error_exit(cmd, p, execve_error);
 	}
-	else
-		if (i == p->pipe_count )
-		{
-		ft_printf("inside child id: %i , i:%i\n",id,i);
-			p->last_id = id;
-		}
+	else if (i == p->pipe_count)
+		p->last_id = id;
 }
 
 int	**initiate_fd(int len)

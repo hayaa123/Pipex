@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 15:25:07 by hal-lawa          #+#    #+#             */
-/*   Updated: 2025/12/09 11:59:24 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/10 09:51:31 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,19 @@ void		fork_error(void);
 int			dup2_error(void);
 int			execve_error(void);
 void		pipe_error(void);
-void		open_file_error(void);
-void		command_error(void);
+int			open_file_error(void);
+int			command_error(void);
 int			set_output(t_pipex p, int i);
 int			set_input(t_pipex pipex, int i);
 int			**initiate_fd(int len);
-void	create_a_process(char **cmd, int in_out[], t_pipex *p, int i);
+void		create_a_process(char **cmd, int in_out[], t_pipex *p, int i);
 void		safe_close(int *fd, char *msg);
-void		free_cmd_and_error(char **cmd, void (*f)());
+// void		free_cmd_and_error(char **cmd, void (*f)());
 int			count_eror(void);
 t_pipex		initialte_pipex(int argc, char **argv, char **env);
 void		close_readers(int **fd);
 void		close_files(t_pipex p, int i, int in_out[]);
+void		error_exit(char **cmd, t_pipex *p, int f(void));
+void		ch_close_files(t_pipex p);
 
 #endif
