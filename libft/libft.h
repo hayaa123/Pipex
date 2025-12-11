@@ -6,7 +6,7 @@
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/14 10:40:19 by hal-lawa          #+#    #+#             */
-/*   Updated: 2025/11/23 15:29:02 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/11 12:41:37 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,5 @@ void	ft_lstclear(t_list **lst, void (*del)(void*));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 int		ft_printf(const char *format, ...);
-// int		print_string(char *str);
-// int		print_pointer(void *pointer);
-// int		print_number(int num);
-// int		print_unsigned(unsigned int num);
-// int		print_hexa(unsigned int num, char type);
 
 #endif

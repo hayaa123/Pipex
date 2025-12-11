@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hal-lawa <hal-lawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 21:10:03 by haya              #+#    #+#             */
-/*   Updated: 2025/12/11 12:30:04 by hal-lawa         ###   ########.fr       */
+/*   Updated: 2025/12/11 12:32:51 by hal-lawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "pipex_bonus.h"
 
 static void	create_pipes(int argc, int **fd)
 {
@@ -82,7 +82,7 @@ int	main(int argc, char **argv, char *env[])
 	int		i;
 
 	i = 0;
-	if (argc != 5)
+	if (argc < 5)
 		return (count_eror());
 	pipex = initialte_pipex(argc, argv, env);
 	if (!pipex.fds)
